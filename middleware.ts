@@ -1,31 +1,25 @@
-import { authMiddleware } from "@clerk/nextjs";
-
-import { NextRequest, NextResponse } from "next/server";
-
-const PUBLIC_FILE = /\.(.*)$/;
-
-export async function middleware(req: NextRequest) {
-  if (
-    req.nextUrl.pathname.startsWith("/_next") ||
-    req.nextUrl.pathname.includes("/api/") ||
-    PUBLIC_FILE.test(req.nextUrl.pathname)
-  ) {
-    return;
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config,{ isServer }) => {
+    config.externals.push({
+      "utf-8-validate": "commonjs utf-8-validate",
+      bufferutil: "commonjs bufferutil"
+    });
+    if (!isServer) {
+      // don't resolve 'fs' module on the client to prevent this error on build --> Error: Can't resolve 'fs'
+      config.resolve.fallback = {
+          fs: false
+      };
   }
-
-  if (req.nextUrl.locale === "default") {
-    const locale = "en";
-    return NextResponse.redirect(
-      new URL(`/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
-    );
+    return config;
+  },
+    images: {
+      domains: [
+        "googleusercontent.com",
+        "oaidalleapiprodscus.blob.core.windows.net",
+        "cdn.openai.com"
+      ]
+    },
   }
-}
- 
-export default authMiddleware({
-      publicRoutes:["/"]
-});
-
-export const config = {
-      matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
-};
- 
+  
+  module.exports = nextConfig
