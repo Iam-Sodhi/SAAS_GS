@@ -1,9 +1,17 @@
+"use client"
+import { useRouter } from "next/navigation";
+import { useEffect } from "react"
 
 
 export default function Home() {
-  return (
-    <main >
-    
-    </main>
-  )
-}
+  const router =useRouter();
+  useEffect(() => {
+    // Check if the current URL is the root URL
+    router.push('/dashboard');
+  }, [router]);
+    return (
+      <main >
+      
+      </main>
+    )
+  }
