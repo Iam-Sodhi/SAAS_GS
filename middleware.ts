@@ -1,25 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  webpack: (config,{ isServer }) => {
-    config.externals.push({
-      "utf-8-validate": "commonjs utf-8-validate",
-      bufferutil: "commonjs bufferutil"
-    });
-    if (!isServer) {
-      // don't resolve 'fs' module on the client to prevent this error on build --> Error: Can't resolve 'fs'
-      config.resolve.fallback = {
-          fs: false
-      };
-  }
-    return config;
-  },
-    images: {
-      domains: [
-        "googleusercontent.com",
-        "oaidalleapiprodscus.blob.core.windows.net",
-        "cdn.openai.com"
-      ]
-    },
-  }
-  
-  module.exports = nextConfig
+import { authMiddleware } from "@clerk/nextjs";
+ 
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
+export default authMiddleware({
+      publicRoutes:["/"]
+});
+ 
+export const config = {
+      matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+};
+ 
