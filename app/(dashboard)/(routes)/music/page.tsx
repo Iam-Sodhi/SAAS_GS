@@ -14,14 +14,11 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import Heading from "@/components/Heading";
 import Empty from "@/components/Empty";
 import Loader from "@/components/Loader";
+import { formSchema } from "./constants";
 
 
 
-export const formSchema = z.object({
-    prompt: z.string().min(1, {
-      message: "Music prompt is required"
-    }),
-  });
+
 const MusicPage = () => {
  // const proModal = useProModal();
   const router = useRouter();

@@ -5,37 +5,29 @@ import axios from "axios";
 import { Code } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/navigation";
 import { ChatCompletionRequestMessage } from "openai";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import Heading from "@/components/Heading";
+import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
 import Empty from "@/components/Empty";
 import { UserAvatar } from "@/components/UserAvatar";
 import { BotAvatar } from "@/components/BotAvatar";
-import ReactMarkdown from "react-markdown";
-
-export const formSchema = z.object({
-  prompt: z.string().min(1, {
-    message: "Prompt is required."
-  }),
-});
+import { formSchema } from "./constants";
 
 const CodePage = () => {
   const router = useRouter();
-  //const proModal = useProModal();
+ // const proModal = useProModal();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      prompt: ""
-    }
   });
 
   const isLoading = form.formState.isSubmitting;
@@ -50,11 +42,10 @@ const CodePage = () => {
       
       form.reset();
     } catch (error: any) {
-    //   if (error?.response?.status === 403) {
-    //     proModal.onOpen();
-    //   } else {
-    //     toast.error("Something went wrong.");
-    //   }
+      if (error?.response?.status === 403) {
+      } else {
+        // toast.error("Something went wrong.");
+      }
     } finally {
       router.refresh();
     }
